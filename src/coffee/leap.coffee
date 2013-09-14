@@ -23,7 +23,7 @@
   positionFingerLeft = 0
 
   # Merge user defined settings with defaults
-  _.defaults(leapConfig, config) if leapConfig
+  _.extend(config, leapConfig) if leapConfig
 
   pointer = $('<div>')
   pointer.attr("id", "leap")

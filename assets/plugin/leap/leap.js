@@ -19,7 +19,7 @@
     positionFingerTop = 0;
     positionFingerLeft = 0;
     if (leapConfig) {
-      _.defaults(leapConfig, config);
+      _.extend(config, leapConfig);
     }
     pointer = $('<div>');
     pointer.attr("id", "leap");
