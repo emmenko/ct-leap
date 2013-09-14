@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Airfield - powered by Leap Motion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="assets/css/reveal.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+  </head>
+  <body>
+    <div id="helper">
+      <img src="assets/images/help.png" data-action="show-help">
+    </div>
+    <div id="helpScreen" style="visibility: hidden; z-index: 0;">
+      <img src="assets/images/help-screen.png" data-action="hide-help">
+    </div>
+    <div class="reveal">
+      <div class="slides">
+        <section data-background="assets/images/airfield-slide1.jpg">
+          <section></section>
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
+            <img class="stretch" src="assets/images/airfield-slide3-p1.png" style="max-width: 100%;">
+          </section>
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
+            <img class="stretch" src="assets/images/airfield-slide3-p2.png" style="max-width: 100%;">
+          </section>
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
+            <img class="stretch" src="assets/images/airfield-slide3-p3.png" style="max-width: 100%;">
+          </section>
+        </section>
+        <section data-background="assets/images/airfield-slide2.jpg"></section>
+        <section data-background="assets/images/airfield-slide3.jpg">
+        </section>
+      </div>
+    </div>
+    <script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
+    <script src="assets/lib/js/reveal.js"></script>
+    <script type="text/javascript">
+      Reveal.initialize({
+        // The "normal" size of the presentation, aspect ratio will be preserved when the presentation is scaled to fit different resolutions.
+        // Can be specified using percentage units.
+        width                 : "100%",
+        height                : "100%",
+        margin                : -0.1,         // Factor of the display size that should remain empty around the content
+        minScale              : 0,            // Bounds for smallest/largest possible scale to apply to content
+        maxScale              : 1.0,
+        controls              : false,        // Display controls in the bottom right corner
+        progress              : false,        // Display a presentation progress bar
+        history               : false,        // Push each slide change to the browser history
+        keyboard              : true,         // Enable keyboard shortcuts for navigation
+        touch                 : true,         // Enable touch events for navigation
+        overview              : true,         // Enable the slide overview mode
+        center                : true,         // Vertical centering of slides
+        loop                  : false,        // Loop the presentation
+        rtl                   : false,        // Change the presentation direction to be RTL
+        autoSlide             : 0,            // Number of ms between automatically proceeding to the next slide,
+                                              // Disabled when set to 0, this value can be overwritten by using a data-autoslide attribute on your slides
+        mouseWheel            : false,        // Enable slide navigation via mouse wheel
+        transition            : 'linear',     // Transition style [default/cube/page/concave/zoom/linear/fade/none]
+        transitionSpeed       : 'default',    // Transition speed [default/fast/slow]
+        backgroundTransition  : 'slide',      // Transition style for full page backgrounds [default/linear/none]
+
+        leap: {
+          autoCenter          : false,        // Center the pointer based on where you put your finger into the leap motions detection field
+          gestureDelay        : 500,          // Delay between gestures in ms
+          naturalSwipe        : true,         // Swipe as though you were touching a touch screen. Set to false to invert
+          pointerColor        : '#d80000',    // Red pointer
+          pointerOpacity      : 0.5,          // Set pointer opacity to 0.5
+          pointerSize         : 15,           // The minimum height and width of the pointer
+          pointerTolerance    : 120           // Bigger = slower pointer
+        },
+
+        dependencies: [
+          { src: 'assets/plugin/leap/leap.js', async: true }
+        ]
+
+      });
+    </script>
+  </body>
+</html>
