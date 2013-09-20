@@ -1,6 +1,6 @@
 (function() {
   (function($, window) {
-    var LineTo, Loader;
+    var Loader;
     Reveal.initialize({
       width: "100%",
       height: "100%",
@@ -94,58 +94,11 @@
       return Loader;
 
     })();
-    LineTo = (function() {
-      function LineTo(opts) {
-        var container, containerOffset, lineTo, targetOffset;
-        this._options = $.extend({
-          el: $("#canvas"),
-          strokeStyle: "#FFFFFF",
-          lineCap: "square",
-          lineWidth: 8.0,
-          targetId: "point"
-        }, opts);
-        container = this._options.el;
-        containerOffset = $(container).offset();
-        targetOffset = $("#" + this._options.targetId).offset();
-        lineTo = {
-          top: targetOffset.top - containerOffset.top,
-          left: targetOffset.left - containerOffset.left
-        };
-        this.ctx = container.getContext("2d");
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = this._options.strokeStyle;
-        this.ctx.lineCap = this._options.lineCap;
-        this.ctx.lineWidth = this._options.lineWidth;
-        this.ctx.moveTo(lineTo.left + 15, lineTo.top + 30);
-        this.ctx.lineTo(containerOffset.left, containerOffset.top);
-        this.ctx.fill();
-      }
-
-      LineTo.prototype.draw = function() {
-        return this.ctx.stroke();
-      };
-
-      return LineTo;
-
-    })();
-    window.Loader = Loader;
-    return window.LineTo = LineTo;
+    return window.Loader = Loader;
   })(jQuery, window);
 
   $(document).ready(function() {
-    var linesTo, loaders;
-    linesTo = $("canvas[data-id=line-to]");
-    $.each(linesTo, function(i, el) {
-      var lineTo, lineToEl;
-      lineToEl = $(el);
-      lineTo = new LineTo({
-        el: el,
-        targetId: lineToEl.data("target"),
-        strokeStyle: "rgb(222,199,118)",
-        lineWidth: 4
-      });
-      return lineTo.draw();
-    });
+    var loaders;
     loaders = $("canvas[data-id=loader]");
     return $.each(loaders, function(i, el) {
       var container, loader, loaderEl;

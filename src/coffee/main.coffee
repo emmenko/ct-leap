@@ -87,51 +87,11 @@
 
     cancel: -> @animation.cancel()
 
-  class LineTo
-    constructor: (opts)->
-      @_options = $.extend
-        el: $("#canvas")
-        strokeStyle: "#FFFFFF"
-        lineCap: "square"
-        lineWidth: 8.0
-        targetId: "point"
-      , opts
-
-      container = @_options.el
-      containerOffset = $(container).offset()
-      targetOffset = $("##{@_options.targetId}").offset()
-      lineTo =
-        top: targetOffset.top - containerOffset.top
-        left: targetOffset.left - containerOffset.left
-      @ctx = container.getContext("2d")
-
-      @ctx.beginPath()
-      @ctx.strokeStyle = @_options.strokeStyle
-      @ctx.lineCap = @_options.lineCap
-      @ctx.lineWidth = @_options.lineWidth
-      @ctx.moveTo(lineTo.left + 15, lineTo.top + 30) # point position
-      @ctx.lineTo(containerOffset.left, containerOffset.top)
-      @ctx.fill()
-
-    draw: -> @ctx.stroke()
-
   window.Loader = Loader
-  window.LineTo = LineTo
 
 )(jQuery, window)
 
 $(document).ready ->
-  # draw lines to connect containers with their anchors
-  linesTo = $("canvas[data-id=line-to]")
-  $.each linesTo, (i, el)->
-    lineToEl = $(el)
-    lineTo = new LineTo
-      el: el
-      targetId: lineToEl.data("target")
-      strokeStyle: "rgb(222,199,118)"
-      lineWidth: 4
-    lineTo.draw()
-
   loaders = $("canvas[data-id=loader]")
   $.each loaders, (i, el)->
     loaderEl = $(el)
