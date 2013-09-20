@@ -1,6 +1,6 @@
 (function() {
   (function($, window) {
-    var Canvas;
+    var LineTo, Loader;
     Reveal.initialize({
       width: "100%",
       height: "100%",
@@ -37,8 +37,8 @@
         }
       ]
     });
-    Canvas = (function() {
-      function Canvas(opts) {
+    Loader = (function() {
+      function Loader(opts) {
         var container,
           _this = this;
         this._options = $.extend({
@@ -55,13 +55,13 @@
         this.ctx.beginPath();
         this.ctx.strokeStyle = this._options.strokeStyle;
         this.ctx.lineCap = this._options.lineCap;
+        this.ctx.lineWidth = this._options.lineWidth;
         this.ctx.closePath();
         this.ctx.fill();
-        this.ctx.lineWidth = this._options.lineWidth;
         this.imageData = this.ctx.getImageData(0, 0, container.width, container.height);
         this.animation = new Fx({
           duration: 3000,
-          transition: Fx.Transitions.Expo.easeIn,
+          transition: Fx.Transitions.Quint.easeInOut,
           link: "cancel",
           onStep: function(step) {
             return _this.draw(step / 100);
@@ -75,7 +75,7 @@
         };
       }
 
-      Canvas.prototype.draw = function(current) {
+      Loader.prototype.draw = function(current) {
         $(this._options.el).data("progress", current * 100);
         this.ctx.putImageData(this.imageData, 0, 0);
         this.ctx.beginPath();
@@ -83,48 +83,93 @@
         return this.ctx.stroke();
       };
 
-      Canvas.prototype.start = function(start, end) {
+      Loader.prototype.start = function(start, end) {
         return this.animation.start(start, end);
       };
 
-      Canvas.prototype.cancel = function() {
+      Loader.prototype.cancel = function() {
         return this.animation.cancel();
       };
 
-      return Canvas;
+      return Loader;
 
     })();
-    return window.Canvas = Canvas;
+    LineTo = (function() {
+      function LineTo(opts) {
+        var container, containerOffset, lineTo, targetOffset;
+        this._options = $.extend({
+          el: $("#canvas"),
+          strokeStyle: "#FFFFFF",
+          lineCap: "square",
+          lineWidth: 8.0,
+          targetId: "point"
+        }, opts);
+        container = this._options.el;
+        containerOffset = $(container).offset();
+        targetOffset = $("#" + this._options.targetId).offset();
+        lineTo = {
+          top: targetOffset.top - containerOffset.top,
+          left: targetOffset.left - containerOffset.left
+        };
+        this.ctx = container.getContext("2d");
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this._options.strokeStyle;
+        this.ctx.lineCap = this._options.lineCap;
+        this.ctx.lineWidth = this._options.lineWidth;
+        this.ctx.moveTo(lineTo.left + 15, lineTo.top + 30);
+        this.ctx.lineTo(containerOffset.left, containerOffset.top);
+        this.ctx.fill();
+      }
+
+      LineTo.prototype.draw = function() {
+        return this.ctx.stroke();
+      };
+
+      return LineTo;
+
+    })();
+    window.Loader = Loader;
+    return window.LineTo = LineTo;
   })(jQuery, window);
 
   $(document).ready(function() {
-    var loaders;
+    var linesTo, loaders;
+    linesTo = $("canvas[data-id=line-to]");
+    $.each(linesTo, function(i, el) {
+      var lineTo, lineToEl;
+      lineToEl = $(el);
+      lineTo = new LineTo({
+        el: el,
+        targetId: lineToEl.data("target"),
+        strokeStyle: "rgb(222,199,118)",
+        lineWidth: 4
+      });
+      return lineTo.draw();
+    });
     loaders = $("canvas[data-id=loader]");
     return $.each(loaders, function(i, el) {
-      var canvas, container, loader;
-      loader = $(el);
-      canvas = new Canvas({
+      var container, loader, loaderEl;
+      loaderEl = $(el);
+      loader = new Loader({
         el: el,
-        startAngle: loader.data("angle-start")
+        startAngle: loaderEl.data("angle-start")
       });
-      container = loader.closest("*[data-toggle=pointer]");
+      container = loaderEl.closest("*[data-toggle=pointer]");
       return container.hover(function(evt) {
-        var progress, target;
-        canvas.cancel();
-        target = $(evt.currentTarget);
-        if (!target.hasClass("active")) {
-          target.addClass("active");
-          progress = target.find("canvas").data("progress");
-          return canvas.start(progress, 90);
+        var progress;
+        loader.cancel();
+        if (!container.hasClass("active")) {
+          container.addClass("active");
+          progress = container.find("canvas[data-id=loader]").data("progress");
+          return loader.start(progress, 90);
         }
       }, function(evt) {
-        var progress, target;
-        canvas.cancel();
-        target = $(evt.currentTarget);
-        if (target.hasClass("active")) {
-          target.removeClass("active");
-          progress = target.find("canvas").data("progress");
-          return canvas.start(progress, 0);
+        var progress;
+        loader.cancel();
+        if (container.hasClass("active")) {
+          container.removeClass("active");
+          progress = container.find("canvas[data-id=loader]").data("progress");
+          return loader.start(progress, 0);
         }
       });
     });

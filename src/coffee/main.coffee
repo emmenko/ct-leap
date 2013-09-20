@@ -38,7 +38,7 @@
     ]
 
 
-  class Canvas
+  class Loader
     constructor: (opts)->
       @_options = $.extend
         el: $("#canvas")
@@ -56,15 +56,16 @@
       @ctx.beginPath()
       @ctx.strokeStyle = @_options.strokeStyle
       @ctx.lineCap = @_options.lineCap
+      @ctx.lineWidth = @_options.lineWidth
       @ctx.closePath()
       @ctx.fill()
-      @ctx.lineWidth = @_options.lineWidth
 
       @imageData = @ctx.getImageData(0, 0, container.width, container.height)
 
+      # mootools
       @animation = new Fx
         duration: 3000
-        transition: Fx.Transitions.Expo.easeIn
+        transition: Fx.Transitions.Quint.easeInOut
         link: "cancel"
         onStep: (step)=> @draw(step / 100)
 
@@ -86,29 +87,66 @@
 
     cancel: -> @animation.cancel()
 
-  window.Canvas = Canvas
+  class LineTo
+    constructor: (opts)->
+      @_options = $.extend
+        el: $("#canvas")
+        strokeStyle: "#FFFFFF"
+        lineCap: "square"
+        lineWidth: 8.0
+        targetId: "point"
+      , opts
+
+      container = @_options.el
+      containerOffset = $(container).offset()
+      targetOffset = $("##{@_options.targetId}").offset()
+      lineTo =
+        top: targetOffset.top - containerOffset.top
+        left: targetOffset.left - containerOffset.left
+      @ctx = container.getContext("2d")
+
+      @ctx.beginPath()
+      @ctx.strokeStyle = @_options.strokeStyle
+      @ctx.lineCap = @_options.lineCap
+      @ctx.lineWidth = @_options.lineWidth
+      @ctx.moveTo(lineTo.left + 15, lineTo.top + 30) # point position
+      @ctx.lineTo(containerOffset.left, containerOffset.top)
+      @ctx.fill()
+
+    draw: -> @ctx.stroke()
+
+  window.Loader = Loader
+  window.LineTo = LineTo
 
 )(jQuery, window)
 
 $(document).ready ->
+  # draw lines to connect containers with their anchors
+  linesTo = $("canvas[data-id=line-to]")
+  $.each linesTo, (i, el)->
+    lineToEl = $(el)
+    lineTo = new LineTo
+      el: el
+      targetId: lineToEl.data("target")
+      strokeStyle: "rgb(222,199,118)"
+      lineWidth: 4
+    lineTo.draw()
 
   loaders = $("canvas[data-id=loader]")
   $.each loaders, (i, el)->
-    loader = $(el)
-    canvas = new Canvas el: el, startAngle: loader.data("angle-start")
+    loaderEl = $(el)
+    loader = new Loader el: el, startAngle: loaderEl.data("angle-start")
 
-    container = loader.closest("*[data-toggle=pointer]")
+    container = loaderEl.closest("*[data-toggle=pointer]")
     container.hover (evt)->
-      canvas.cancel()
-      target = $(evt.currentTarget)
-      if not target.hasClass("active")
-        target.addClass("active")
-        progress = target.find("canvas").data("progress")
-        canvas.start(progress, 90)
+      loader.cancel()
+      if not container.hasClass("active")
+        container.addClass("active")
+        progress = container.find("canvas[data-id=loader]").data("progress")
+        loader.start(progress, 90)
     , (evt)->
-      canvas.cancel()
-      target = $(evt.currentTarget)
-      if target.hasClass("active")
-        target.removeClass("active")
-        progress = target.find("canvas").data("progress")
-        canvas.start(progress, 0)
+      loader.cancel()
+      if container.hasClass("active")
+        container.removeClass("active")
+        progress = container.find("canvas[data-id=loader]").data("progress")
+        loader.start(progress, 0)
