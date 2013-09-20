@@ -48,8 +48,8 @@
         startAngle: 90
       , opts
 
-      container = @_options.el
-      @ctx = container.getContext("2d")
+      @container = @_options.el
+      @ctx = @container.getContext("2d")
       @circ = Math.PI * 2
       @startAngle = @_options.startAngle * Math.PI / 180
 
@@ -60,7 +60,7 @@
       @ctx.closePath()
       @ctx.fill()
 
-      @imageData = @ctx.getImageData(0, 0, container.width, container.height)
+      @imageData = @ctx.getImageData(0, 0, @container.width, @container.height)
 
       # mootools
       @animation = new Fx
@@ -72,7 +72,11 @@
           el = $(@_options.el)
           if el.data("progress") > 0
             indexSlide = el.data("target-index")
-            Reveal.slide(null, indexSlide) # navigate up/down
+            if _.isNumber indexSlide
+              Reveal.slide(null, indexSlide) # navigate up/down
+            else
+              switch indexSlide
+                when "show-help" then $("#helpScreen").css("z-index": 40, "visibility": "visible")
 
       @animation.set = (now)->
         ret = Fx.prototype.set.call(this, now)
@@ -84,7 +88,7 @@
       @ctx.putImageData(@imageData, 0, 0)
       @ctx.beginPath()
       # arc(x, y, radius, angleStart, angleEnd, direction)
-      @ctx.arc(125, 125, 115, -@startAngle, ((@circ) * current) - @startAngle, false)
+      @ctx.arc(@container.width / 2, @container.height / 2, @container.width / 2 - 10, -@startAngle, ((@circ) * current) - @startAngle, false)
       @ctx.stroke()
 
     start: (start, end)->

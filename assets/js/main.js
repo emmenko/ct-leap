@@ -39,8 +39,7 @@
     });
     Loader = (function() {
       function Loader(opts) {
-        var container,
-          _this = this;
+        var _this = this;
         this._options = $.extend({
           el: $("#canvas"),
           strokeStyle: "#FFFFFF",
@@ -48,8 +47,8 @@
           lineWidth: 8.0,
           startAngle: 90
         }, opts);
-        container = this._options.el;
-        this.ctx = container.getContext("2d");
+        this.container = this._options.el;
+        this.ctx = this.container.getContext("2d");
         this.circ = Math.PI * 2;
         this.startAngle = this._options.startAngle * Math.PI / 180;
         this.ctx.beginPath();
@@ -58,7 +57,7 @@
         this.ctx.lineWidth = this._options.lineWidth;
         this.ctx.closePath();
         this.ctx.fill();
-        this.imageData = this.ctx.getImageData(0, 0, container.width, container.height);
+        this.imageData = this.ctx.getImageData(0, 0, this.container.width, this.container.height);
         this.animation = new Fx({
           duration: 3000,
           transition: Fx.Transitions.Quint.easeInOut,
@@ -71,7 +70,17 @@
             el = $(_this._options.el);
             if (el.data("progress") > 0) {
               indexSlide = el.data("target-index");
-              return Reveal.slide(null, indexSlide);
+              if (_.isNumber(indexSlide)) {
+                return Reveal.slide(null, indexSlide);
+              } else {
+                switch (indexSlide) {
+                  case "show-help":
+                    return $("#helpScreen").css({
+                      "z-index": 40,
+                      "visibility": "visible"
+                    });
+                }
+              }
             }
           }
         });
@@ -87,7 +96,7 @@
         $(this._options.el).data("progress", current * 100);
         this.ctx.putImageData(this.imageData, 0, 0);
         this.ctx.beginPath();
-        this.ctx.arc(125, 125, 115, -this.startAngle, (this.circ * current) - this.startAngle, false);
+        this.ctx.arc(this.container.width / 2, this.container.height / 2, this.container.width / 2 - 10, -this.startAngle, (this.circ * current) - this.startAngle, false);
         return this.ctx.stroke();
       };
 
