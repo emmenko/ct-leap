@@ -1,6 +1,7 @@
 (function() {
-  (function() {
-    var body, config, controller, lastGesture, leapConfig, pointer, positionFingerLeft, positionFingerTop;
+  (function($, window) {
+    var body, config, controller, document, lastGesture, leapConfig, pointer, positionFingerLeft, positionFingerTop;
+    document = window.document;
     body = $("body");
     controller = new Leap.Controller({
       enableGestures: true
@@ -139,6 +140,6 @@
       }
     });
     return controller.connect();
-  })();
+  })(jQuery, window);
 
 }).call(this);

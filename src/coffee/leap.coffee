@@ -6,7 +6,8 @@
 # Nicola Molinari [emmenko]
 
 
-(->
+(($, window)->
+  document    = window.document
   body        = $("body")
   controller  = new Leap.Controller enableGestures: true
   lastGesture = 0
@@ -139,4 +140,5 @@
                 $("#helpScreen").css("z-index": 0, "visibility": "hidden")
 
   controller.connect()
-)()
+
+)(jQuery, window)

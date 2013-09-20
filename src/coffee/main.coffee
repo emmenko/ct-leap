@@ -1,4 +1,4 @@
-(->
+(($, window)->
   # Initialite reveal.js
   Reveal.initialize
     # The "normal" size of the presentation, aspect ratio will be preserved when the presentation is scaled to fit different resolutions.
@@ -36,4 +36,79 @@
     dependencies: [
       { src: 'assets/plugin/leap/leap.js', async: true }
     ]
-)()
+
+
+  class Canvas
+    constructor: (opts)->
+      @_options = $.extend
+        el: $("#canvas")
+        strokeStyle: "#FFFFFF"
+        lineCap: "square"
+        lineWidth: 8.0
+        startAngle: 90
+      , opts
+
+      container = @_options.el
+      @ctx = container.getContext("2d")
+      @circ = Math.PI * 2
+      @startAngle = @_options.startAngle * Math.PI / 180
+
+      @ctx.beginPath()
+      @ctx.strokeStyle = @_options.strokeStyle
+      @ctx.lineCap = @_options.lineCap
+      @ctx.closePath()
+      @ctx.fill()
+      @ctx.lineWidth = @_options.lineWidth
+
+      @imageData = @ctx.getImageData(0, 0, container.width, container.height)
+
+      @animation = new Fx
+        duration: 3000
+        transition: Fx.Transitions.Expo.easeIn
+        link: "cancel"
+        onStep: (step)=> @draw(step / 100)
+
+      @animation.set = (now)->
+        ret = Fx.prototype.set.call(this, now)
+        this.fireEvent("step", now)
+        ret
+
+    draw: (current)->
+      $(@_options.el).data("progress", current * 100)
+      @ctx.putImageData(@imageData, 0, 0)
+      @ctx.beginPath()
+      # arc(x, y, radius, angleStart, angleEnd, direction)
+      @ctx.arc(125, 125, 115, -@startAngle, ((@circ) * current) - @startAngle, false)
+      @ctx.stroke()
+
+    start: (start, end)->
+      @animation.start(start, end)
+
+    cancel: -> @animation.cancel()
+
+  window.Canvas = Canvas
+
+)(jQuery, window)
+
+$(document).ready ->
+
+  loaders = $("canvas[data-id=loader]")
+  $.each loaders, (i, el)->
+    loader = $(el)
+    canvas = new Canvas el: el, startAngle: loader.data("angle-start")
+
+    container = loader.closest("*[data-toggle=pointer]")
+    container.hover (evt)->
+      canvas.cancel()
+      target = $(evt.currentTarget)
+      if not target.hasClass("active")
+        target.addClass("active")
+        progress = target.find("canvas").data("progress")
+        canvas.start(progress, 90)
+    , (evt)->
+      canvas.cancel()
+      target = $(evt.currentTarget)
+      if target.hasClass("active")
+        target.removeClass("active")
+        progress = target.find("canvas").data("progress")
+        canvas.start(progress, 0)
