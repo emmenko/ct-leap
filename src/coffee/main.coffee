@@ -68,6 +68,11 @@
         transition: Fx.Transitions.Quint.easeInOut
         link: "cancel"
         onStep: (step)=> @draw(step / 100)
+        onComplete: =>
+          el = $(@_options.el)
+          if el.data("progress") > 0
+            indexSlide = el.data("target-index")
+            Reveal.slide(null, indexSlide) # navigate up/down
 
       @animation.set = (now)->
         ret = Fx.prototype.set.call(this, now)

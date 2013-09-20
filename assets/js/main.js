@@ -65,6 +65,14 @@
           link: "cancel",
           onStep: function(step) {
             return _this.draw(step / 100);
+          },
+          onComplete: function() {
+            var el, indexSlide;
+            el = $(_this._options.el);
+            if (el.data("progress") > 0) {
+              indexSlide = el.data("target-index");
+              return Reveal.slide(null, indexSlide);
+            }
           }
         });
         this.animation.set = function(now) {
