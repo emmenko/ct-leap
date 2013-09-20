@@ -22,6 +22,7 @@
     pointerTolerance : 120       # Bigger = slower pointer.
   positionFingerTop  = 0
   positionFingerLeft = 0
+  currentPointableElement = undefined
 
   # Merge user defined settings with defaults
   _.extend(config, leapConfig) if leapConfig
@@ -79,6 +80,19 @@
         "visibility"      : "visible"
         "top"             : "#{positionFingerTop}px"
         "left"            : "#{positionFingerLeft}px"
+
+      # get element based on fingers position
+      pointedElement = $(document.elementFromPoint(positionFingerLeft, positionFingerTop))
+      pointableElement = pointedElement.data("toggle") or pointedElement.closest("*[data-toggle=pointer]")
+      if pointableElement.length > 0
+        pointableElement.data("loader").onHover()
+        currentPointableElement = pointableElement
+      else
+        if currentPointableElement
+          currentPointableElement.data("loader").onLeave()
+          currentPointableElement = undefined
+
+
 
     else
       # Hide pointer on exit

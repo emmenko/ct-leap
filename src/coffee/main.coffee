@@ -49,7 +49,8 @@
       , opts
 
       @container = @_options.el
-      @ctx = @container.getContext("2d")
+      @parent = @container.closest("*[data-toggle=pointer]")
+      @ctx = @container[0].getContext("2d")
       @circ = Math.PI * 2
       @startAngle = @_options.startAngle * Math.PI / 180
 
@@ -60,7 +61,7 @@
       @ctx.closePath()
       @ctx.fill()
 
-      @imageData = @ctx.getImageData(0, 0, @container.width, @container.height)
+      @imageData = @ctx.getImageData(0, 0, @container.width(), @container.height())
 
       # mootools
       @animation = new Fx
@@ -88,7 +89,7 @@
       @ctx.putImageData(@imageData, 0, 0)
       @ctx.beginPath()
       # arc(x, y, radius, angleStart, angleEnd, direction)
-      @ctx.arc(@container.width / 2, @container.height / 2, @container.width / 2 - 10, -@startAngle, ((@circ) * current) - @startAngle, false)
+      @ctx.arc(@container.width() / 2, @container.height() / 2, @container.width() / 2 - 10, -@startAngle, ((@circ) * current) - @startAngle, false)
       @ctx.stroke()
 
     start: (start, end)->
@@ -96,26 +97,35 @@
 
     cancel: -> @animation.cancel()
 
+    onHover: ->
+      if not @parent.hasClass("active")
+        @cancel()
+        @parent.addClass("active")
+        progress = @parent.find("canvas[data-id=loader]").data("progress")
+        @start(progress, 90)
+
+    onLeave: ->
+      if @parent.hasClass("active")
+        @cancel()
+        @parent.removeClass("active")
+        progress = @parent.find("canvas[data-id=loader]").data("progress")
+        @start(progress, 0)
+
   window.Loader = Loader
 
 )(jQuery, window)
 
 $(document).ready ->
-  loaders = $("canvas[data-id=loader]")
-  $.each loaders, (i, el)->
-    loaderEl = $(el)
-    loader = new Loader el: el, startAngle: loaderEl.data("angle-start")
+  containers = $("*[data-toggle=pointer]")
+  $.each containers, (i, el)->
+    container = $(el)
+    loaderEl = container.find("canvas[data-id=loader]")
+    if loaderEl.length > 0
+      loader = new Loader
+        el: loaderEl
+        startAngle: loaderEl.data("angle-start")
 
-    container = loaderEl.closest("*[data-toggle=pointer]")
-    container.hover (evt)->
-      loader.cancel()
-      if not container.hasClass("active")
-        container.addClass("active")
-        progress = container.find("canvas[data-id=loader]").data("progress")
-        loader.start(progress, 90)
-    , (evt)->
-      loader.cancel()
-      if container.hasClass("active")
-        container.removeClass("active")
-        progress = container.find("canvas[data-id=loader]").data("progress")
-        loader.start(progress, 0)
+      container.data("loader", loader)
+      container.hover ->
+        loader.onHover()
+      , -> loader.onLeave()

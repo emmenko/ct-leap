@@ -48,7 +48,8 @@
           startAngle: 90
         }, opts);
         this.container = this._options.el;
-        this.ctx = this.container.getContext("2d");
+        this.parent = this.container.closest("*[data-toggle=pointer]");
+        this.ctx = this.container[0].getContext("2d");
         this.circ = Math.PI * 2;
         this.startAngle = this._options.startAngle * Math.PI / 180;
         this.ctx.beginPath();
@@ -57,7 +58,7 @@
         this.ctx.lineWidth = this._options.lineWidth;
         this.ctx.closePath();
         this.ctx.fill();
-        this.imageData = this.ctx.getImageData(0, 0, this.container.width, this.container.height);
+        this.imageData = this.ctx.getImageData(0, 0, this.container.width(), this.container.height());
         this.animation = new Fx({
           duration: 3000,
           transition: Fx.Transitions.Quint.easeInOut,
@@ -96,7 +97,7 @@
         $(this._options.el).data("progress", current * 100);
         this.ctx.putImageData(this.imageData, 0, 0);
         this.ctx.beginPath();
-        this.ctx.arc(this.container.width / 2, this.container.height / 2, this.container.width / 2 - 10, -this.startAngle, (this.circ * current) - this.startAngle, false);
+        this.ctx.arc(this.container.width() / 2, this.container.height() / 2, this.container.width() / 2 - 10, -this.startAngle, (this.circ * current) - this.startAngle, false);
         return this.ctx.stroke();
       };
 
@@ -108,6 +109,26 @@
         return this.animation.cancel();
       };
 
+      Loader.prototype.onHover = function() {
+        var progress;
+        if (!this.parent.hasClass("active")) {
+          this.cancel();
+          this.parent.addClass("active");
+          progress = this.parent.find("canvas[data-id=loader]").data("progress");
+          return this.start(progress, 90);
+        }
+      };
+
+      Loader.prototype.onLeave = function() {
+        var progress;
+        if (this.parent.hasClass("active")) {
+          this.cancel();
+          this.parent.removeClass("active");
+          progress = this.parent.find("canvas[data-id=loader]").data("progress");
+          return this.start(progress, 0);
+        }
+      };
+
       return Loader;
 
     })();
@@ -115,33 +136,24 @@
   })(jQuery, window);
 
   $(document).ready(function() {
-    var loaders;
-    loaders = $("canvas[data-id=loader]");
-    return $.each(loaders, function(i, el) {
+    var containers;
+    containers = $("*[data-toggle=pointer]");
+    return $.each(containers, function(i, el) {
       var container, loader, loaderEl;
-      loaderEl = $(el);
-      loader = new Loader({
-        el: el,
-        startAngle: loaderEl.data("angle-start")
-      });
-      container = loaderEl.closest("*[data-toggle=pointer]");
-      return container.hover(function(evt) {
-        var progress;
-        loader.cancel();
-        if (!container.hasClass("active")) {
-          container.addClass("active");
-          progress = container.find("canvas[data-id=loader]").data("progress");
-          return loader.start(progress, 90);
-        }
-      }, function(evt) {
-        var progress;
-        loader.cancel();
-        if (container.hasClass("active")) {
-          container.removeClass("active");
-          progress = container.find("canvas[data-id=loader]").data("progress");
-          return loader.start(progress, 0);
-        }
-      });
+      container = $(el);
+      loaderEl = container.find("canvas[data-id=loader]");
+      if (loaderEl.length > 0) {
+        loader = new Loader({
+          el: loaderEl,
+          startAngle: loaderEl.data("angle-start")
+        });
+        container.data("loader", loader);
+        return container.hover(function() {
+          return loader.onHover();
+        }, function() {
+          return loader.onLeave();
+        });
+      }
     });
   });
 

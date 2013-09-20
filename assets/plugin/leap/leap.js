@@ -1,6 +1,6 @@
 (function() {
   (function($, window) {
-    var body, config, controller, document, lastGesture, leapConfig, pointer, positionFingerLeft, positionFingerTop;
+    var body, config, controller, currentPointableElement, document, lastGesture, leapConfig, pointer, positionFingerLeft, positionFingerTop;
     document = window.document;
     body = $("body");
     controller = new Leap.Controller({
@@ -19,6 +19,7 @@
     };
     positionFingerTop = 0;
     positionFingerLeft = 0;
+    currentPointableElement = void 0;
     if (leapConfig) {
       _.extend(config, leapConfig);
     }
@@ -33,7 +34,7 @@
     });
     pointer.appendTo("body");
     controller.on("frame", function(frame) {
-      var action, entered, enteredPosition, gesture, now, size, tappedElement, tipPosition, x, y;
+      var action, entered, enteredPosition, gesture, now, pointableElement, pointedElement, size, tappedElement, tipPosition, x, y;
       now = new Date().getTime();
       if (frame.fingers.length > 0 && frame.fingers.length < 3) {
         size = -3 * frame.fingers[0].tipPosition[2];
@@ -60,6 +61,17 @@
           "top": "" + positionFingerTop + "px",
           "left": "" + positionFingerLeft + "px"
         });
+        pointedElement = $(document.elementFromPoint(positionFingerLeft, positionFingerTop));
+        pointableElement = pointedElement.data("toggle") || pointedElement.closest("*[data-toggle=pointer]");
+        if (pointableElement.length > 0) {
+          pointableElement.data("loader").onHover();
+          currentPointableElement = pointableElement;
+        } else {
+          if (currentPointableElement) {
+            currentPointableElement.data("loader").onLeave();
+            currentPointableElement = void 0;
+          }
+        }
       } else {
         entered = false;
         pointer.css({
