@@ -37,6 +37,7 @@
         }
       ]
     });
+    Reveal.slide(1, 0);
     Loader = (function() {
       function Loader(opts) {
         var _this = this;

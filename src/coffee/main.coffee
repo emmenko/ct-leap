@@ -36,7 +36,7 @@
     dependencies: [
       { src: 'assets/plugin/leap/leap.js', async: true }
     ]
-
+  Reveal.slide(1, 0) # start from 2nd slide ( 1 <-> 2 <-> 3 )
 
   class Loader
     constructor: (opts)->
