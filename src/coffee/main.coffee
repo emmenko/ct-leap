@@ -72,12 +72,17 @@
         onComplete: =>
           el = $(@_options.el)
           if el.data("progress") > 0
-            indexSlide = el.data("target-index")
-            if _.isNumber indexSlide
-              Reveal.slide(null, indexSlide) # navigate up/down
-            else
-              switch indexSlide
+            actionTarget = el.data("action-target")
+            if actionTarget
+              switch actionTarget
                 when "show-help" then $("#helpScreen").css("z-index": 40, "visibility": "visible")
+            else
+              indexSlideX = el.data("index-slide-x")
+              indexSlideY = el.data("index-slide-y")
+              if _.isNumber(indexSlideX) and _.isNumber(indexSlideY)
+                Reveal.slide(indexSlideX, indexSlideY) # navigate up/down
+              else # do nothing
+                console.log "Not able to open slide given: x(#{indexSlideX}), y(#{indexSlideY})"
 
       @animation.set = (now)->
         ret = Fx.prototype.set.call(this, now)

@@ -67,19 +67,25 @@
             return _this.draw(step / 100);
           },
           onComplete: function() {
-            var el, indexSlide;
+            var actionTarget, el, indexSlideX, indexSlideY;
             el = $(_this._options.el);
             if (el.data("progress") > 0) {
-              indexSlide = el.data("target-index");
-              if (_.isNumber(indexSlide)) {
-                return Reveal.slide(null, indexSlide);
-              } else {
-                switch (indexSlide) {
+              actionTarget = el.data("action-target");
+              if (actionTarget) {
+                switch (actionTarget) {
                   case "show-help":
                     return $("#helpScreen").css({
                       "z-index": 40,
                       "visibility": "visible"
                     });
+                }
+              } else {
+                indexSlideX = el.data("index-slide-x");
+                indexSlideY = el.data("index-slide-y");
+                if (_.isNumber(indexSlideX) && _.isNumber(indexSlideY)) {
+                  return Reveal.slide(indexSlideX, indexSlideY);
+                } else {
+                  return console.log("Not able to open slide given: x(" + indexSlideX + "), y(" + indexSlideY + ")");
                 }
               }
             }

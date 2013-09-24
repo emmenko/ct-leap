@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="helper" data-toggle="pointer">
-      <canvas width="202" height="202" data-id="loader" data-angle-start="75" data-progress="0" data-target-index="show-help"></canvas>
+      <canvas width="202" height="202" data-id="loader" data-angle-start="75" data-progress="0" data-action-target="show-help"></canvas>
       <img src="assets/images/help.png" data-action="show-help">
     </div>
     <div id="helpScreen" style="visibility: hidden; z-index: 0;">
@@ -22,7 +22,7 @@
           <div class="slide-content">
             <div class="price left" data-toggle="pointer">
               <img src="assets/images/s1p1.png" style="top: -145px;">
-              <canvas width="250" height="250" data-id="loader" data-angle-start="70" data-progress="0" data-target-index="1"></canvas>
+              <canvas width="250" height="250" data-id="loader" data-angle-start="70" data-progress="0" data-index-slide-x="0" data-index-slide-y="1"></canvas>
               <div class="price-content slide1">
                 <p class="name">Kleid</p>
                 <p class="amount">199,00 €</p>
@@ -31,7 +31,7 @@
             </div>
             <div class="price middle" data-toggle="pointer">
               <img src="assets/images/s1p2.png" style="left: -145px; top: 120px;">
-              <canvas width="250" height="250" data-id="loader" data-angle-start="175" data-progress="0" data-target-index="2"></canvas>
+              <canvas width="250" height="250" data-id="loader" data-angle-start="175" data-progress="0" data-index-slide-x="0" data-index-slide-y="2"></canvas>
               <div class="price-content">
                 <p class="name">Boy Mantel</p>
                 <p class="amount">849,00 €</p>
@@ -40,7 +40,7 @@
             </div>
             <div class="price right" data-toggle="pointer">
               <img src="assets/images/s1p3.png" style="top: -110px; left: 0;">
-              <canvas width="250" height="250" data-id="loader" data-angle-start="80" data-progress="0" data-target-index="3"></canvas>
+              <canvas width="250" height="250" data-id="loader" data-angle-start="80" data-progress="0" data-index-slide-x="0" data-index-slide-y="3"></canvas>
               <div class="price-content">
                 <p class="name">Leone Mantel</p>
                 <p class="amount">499,00 €</p>
@@ -49,13 +49,13 @@
             </div>
           </div>
           <section></section>
-          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none" data-slide-index="1">
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
             <img class="stretch" src="assets/images/airfield_slide1_p1.png" style="max-width: 100%;">
           </section>
-          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none" data-slide-index="2">
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
             <img class="stretch" src="assets/images/airfield_slide1_p2.png" style="max-width: 100%;">
           </section>
-          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none" data-slide-index="3">
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
             <img class="stretch" src="assets/images/airfield_slide1_p3.png" style="max-width: 100%;">
           </section>
         </section>
@@ -63,7 +63,7 @@
           <div class="slide-content slide2">
             <div class="price left" data-toggle="pointer">
               <img src="assets/images/s2p1.png" style="top: -140px; right: 25px;">
-              <canvas width="250" height="250" data-id="loader" data-angle-start="60" data-progress="0" data-target-index="1"></canvas>
+              <canvas width="250" height="250" data-id="loader" data-angle-start="60" data-progress="0" data-index-slide-x="1" data-index-slide-y="1"></canvas>
               <div class="price-content">
                 <p class="name">Bay Blazer</p>
                 <p class="amount">299,00 €</p>
@@ -72,7 +72,7 @@
             </div>
             <div class="price middle" data-toggle="pointer">
               <img src="assets/images/s2p2.png" style="left: -135px; top: -10px;">
-              <canvas width="250" height="250" data-id="loader" data-angle-start="135" data-progress="0" data-target-index="2"></canvas>
+              <canvas width="250" height="250" data-id="loader" data-angle-start="135" data-progress="0" data-index-slide-x="1" data-index-slide-y="2"></canvas>
               <div class="price-content">
                 <p class="name">Kleid</p>
                 <p class="amount">239,00 €</p>
@@ -81,7 +81,7 @@
             </div>
             <div class="price right" data-toggle="pointer">
               <img src="assets/images/s2p3.png" style="top: -85px; left: -50px;">
-              <canvas width="250" height="250" data-id="loader" data-angle-start="110" data-progress="0" data-target-index="3"></canvas>
+              <canvas width="250" height="250" data-id="loader" data-angle-start="110" data-progress="0" data-index-slide-x="1" data-index-slide-y="3"></canvas>
               <div class="price-content">
                 <p class="name">Becco Jacke</p>
                 <p class="amount">699,00 €</p>
@@ -90,13 +90,13 @@
             </div>
           </div>
           <section></section>
-          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none" data-slide-index="1">
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
             <img class="stretch" src="assets/images/airfield_slide2_p1.png" style="max-width: 100%;">
           </section>
-          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none" data-slide-index="2">
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
             <img class="stretch" src="assets/images/airfield_slide2_p2.png" style="max-width: 100%;">
           </section>
-          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none" data-slide-index="3">
+          <section data-background="rgba(0,0,0,0.5)" data-background-transition="none">
             <img class="stretch" src="assets/images/airfield_slide2_p3.png" style="max-width: 100%;">
           </section>
         </section>
