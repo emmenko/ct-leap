@@ -35,3 +35,7 @@ body .slide-content .price img {position: absolute;}
 
 body .reveal .slides > section.present,
 body .reveal .slides > section > section.present[data-background] {z-index: 50;}
+
+body .slide-content.slide2 .price.left {left: 10%;}
+body .slide-content.slide2 .price.middle {left: 44%; top: 50px;}
+body .slide-content.slide2 .price.right {right: 15%; top: 50px;}
